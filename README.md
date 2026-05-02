@@ -1,88 +1,58 @@
 # SDR MSi Driver
 
-Standalone SDR receiver for MSi2500/MSi001-based devices (SDRplay RSP1A, RSP2, Mirics dongles, and clones).
+Android SDR driver for MSi2500/MSi001-based devices (SDRplay RSP1A, RSP2, Mirics dongles, and clones).
 
-Real-time spectrum display, waterfall, and FM demodulation with audio output.
+Provides rtl_tcp compatible streaming of raw I/Q samples over TCP from MSi.SDR hardware on Android.
+
+## Supported Devices
+
+| VID:PID | Device |
+|---------|--------|
+| 1df7:2500 | Mirics MSi2500 (RSP1C) |
+| 1df7:3000 | SDRplay RSP1A |
+| 1df7:3010 | SDRplay RSP2 |
+| 2040:d300 | Hauppauge WinTV 133559 LF |
+| 07ca:8591 | AverMedia A859 Pure DVBT |
+| 04bb:0537 | IO-DATA GV-TV100 |
+| 0511:0037 | Logitec LDT-1S310U/J |
 
 ## Features
 
-- Spectrum analyzer with FFT (2048-point Hann window)
-- Scrolling waterfall display
-- Wideband FM demodulation with de-emphasis
+- rtl_tcp compatible TCP server for SDR client apps
 - IIR DC blocker (removes zero-IF center spike)
-- Band presets (LF, MW, HF, FM)
-- macOS and Linux support
-
-## Dependencies
-
-| Library | Purpose |
-|---------|---------|
-| libusb 1.0 | USB device communication |
-| SDL2 | Window, OpenGL context, audio |
-| FFTW3f | Single-precision FFT |
-| OpenGL | Spectrum/waterfall rendering |
-
-### macOS (Homebrew)
-
-```bash
-brew install libusb sdl2 fftw
-```
-
-### Linux (apt)
-
-```bash
-sudo apt install libusb-1.0-0-dev libsdl2-dev libfftw3-dev libgl-dev
-```
+- 16-bit signed sample mode
+- HW flavour auto-detection (RSP1A/RSP2 vs generic)
+- USB disconnect crash fix
+- USB transfer resilience (ISOC/BULK fallback)
 
 ## Build
 
-```bash
-mkdir -p build && cd build
-cmake ..
-make -j$(nproc)
-```
-
-## Usage
+Requires Android SDK and JDK 17.
 
 ```bash
-./sdr-msi-driver [freq_mhz] [gain_db]
+ANDROID_HOME=~/Library/Android/sdk \
+JAVA_HOME=/opt/homebrew/Cellar/openjdk@17/17.0.19/libexec/openjdk.jdk/Contents/Home \
+./gradlew assembleDebug
 ```
 
-Examples:
+## Install
+
 ```bash
-./sdr-msi-driver              # 100 MHz, 40 dB
-./sdr-msi-driver 98.5         # 98.5 MHz FM
-./sdr-msi-driver 98.5 49      # 98.5 MHz, 49 dB (LNA on)
-./sdr-msi-driver -L log.txt 100  # with logging
+adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
-
-## Controls
-
-| Key | Action |
-|-----|--------|
-| Up/Down | Tune +/- fine step |
-| Left/Right | Tune +/- coarse step |
-| Mouse wheel | Tune +/- fine step |
-| Click spectrum | Tune to frequency |
-| PgUp/PgDn | Gain +/- 5 dB |
-| +/- | Volume |
-| M | Mute/unmute |
-| D | Toggle FM demod |
-| 1-5 | Band presets (LF1/LF2/MW/HF/FM) |
-| Q/Esc | Quit |
 
 ## Project Structure
 
 ```
 sdr-msi-driver/
-+-- driver/     libmsisdr USB driver (GPL-2.0)
-+-- app/        Application (SDL2 + OpenGL + FFTW3)
-+-- assets/     Icons
-+-- doc/        Architecture documentation
-+-- cmake/      CMake modules
++-- app/             Android application
++-- msisdr/          Driver + JNI library module
++-- sdrdrivertools/  Shared SDR interfaces
++-- assets/          Icons
++-- doc/             Documentation
 ```
 
 ## License
 
-- Application code (`app/`): MIT
-- Driver code (`driver/`): GPL-2.0 (derived from libmirisdr)
+- Application code: MIT
+- Driver code (libmsisdr): GPL-2.0

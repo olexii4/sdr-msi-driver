@@ -1,0 +1,40 @@
+<resources>
+
+    <string name="app_name">SDR MSi Driver</string>
+    <string name="sdr_tcp_exec">sdr_tcp</string>
+	<string name="help">Help</string>
+	<string name="stream">Start stream</string>
+	<string name="kill">Kill</string>
+	<string name="args_hint">sdr_tcp command line arguments</string>
+	<string name="default_args">-a 0.0.0.0 -p 14423 -f 91800000 -s 1024000 -T 0</string>
+	<string name="copy">Copy</string>
+	<string name="copied_to_clip">Output was copied to clipboard</string>
+	<string name="clear">Clear</string>
+
+	<string name="error">Error</string>
+	<string name="notsupported">The required action was not executed due to being not available.</string>
+
+	<string name="choose_device">Device Chooser</string>
+
+	<string name="btn_ok">OK</string>
+
+    <string name="license">License</string>
+	<string name="help_info"> <![CDATA[
+
+	    <h2>About this app</h2>
+	    <p>SDR MSi Driver provides rtl_tcp compatible streaming from MSi2500/MSi001 based SDR devices (SDRplay RSP1A, RSP2, Mirics dongles).</p>
+	    <p>It allows SDR applications to receive raw I/Q samples over TCP from MSi.SDR hardware on Android.</p>
+		<h2>Notes and license</h2>
+		<p>This app is open source. The source code can be found on <a href="https://github.com/olexii4/sdr-msi-driver">github.com/olexii4/sdr-msi-driver</a></p>
+		<h2>Included open source software</h2>
+		<p>Modified version of libmirisdr (renamed libmsisdr)</p>
+		<p>Modified version of libusb <a href="http://libusb.info/">libusb.info</a></p>
+	]]></string>
+
+	<string name="warn_txt">The driver has been installed successfully! Please, launch your host application and it will trigger the driver automatically.</string>
+    <string name="platform_not_supported">Your Android platform is not supported.</string>
+    <string name="enable_gui">Enable advanced mode (for debug &amp; stream to PC)</string>
+
+	<string name="action_settings">Settings</string>
+
+</resources>

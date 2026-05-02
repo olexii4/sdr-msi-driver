@@ -1,0 +1,19 @@
+cmake_minimum_required(VERSION 3.3.1)
+
+PROJECT( "libmsisdr" C )
+
+ADD_SUBDIRECTORY(libusb)
+
+# libmsisdr.c #includes all other .c files — only compile this one file
+SET ( SOURCES_LIB "src/libmsisdr.c" )
+
+SET ( CMAKE_C_FLAGS         "-Wall" )
+SET ( CMAKE_C_FLAGS_DEBUG   "-g -DDEBUG")
+SET ( CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG" )
+
+FIND_LIBRARY( LOG_LIB log )
+
+ADD_LIBRARY( ${PROJECT_NAME} STATIC ${SOURCES_LIB} )
+SET_TARGET_PROPERTIES( ${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON )
+TARGET_INCLUDE_DIRECTORIES( ${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" )
+TARGET_LINK_LIBRARIES( ${PROJECT_NAME} ${LOG_LIB} libusb_miri )

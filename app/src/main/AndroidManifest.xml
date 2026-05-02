@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          android:installLocation="internalOnly">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
+
+    <queries>
+        <package android:name="marto.androsdr2" />
+        <package android:name="marto.androsdr2.a" />
+        <package android:name="de.ses.wavesink" />
+        <package android:name="com.mantz_it.rfanalyzer" />
+        <package android:name="io.welle.welle" />
+        <package android:name="com.enthusiasticcoder.adsbflightmonitor" />
+        <package android:name="com.sdr_labs.magicsdr" />
+        <package android:name="eu.ebctech.dump1090" />
+    </queries>
+
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="true" />
+
+    <application
+        android:fullBackupContent="true"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme"
+        tools:ignore="UnusedAttribute"
+        android:name="com.sdrtouch.rtlsdr.RtlSdrApplication">
+
+        <activity android:name="com.sdrtouch.rtlsdr.DeviceOpenActivity"
+                  android:theme="@android:style/Theme.Dialog"
+                  android:exported="true" >
+            <intent-filter>
+                <data android:scheme="iqsrc" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name="com.sdrtouch.rtlsdr.UsbDelegate"
+            android:theme = "@android:style/Theme.Translucent.NoTitleBar"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/autostart_device_filter" />
+        </activity>
+
+        <activity
+            android:name="com.sdrtouch.rtlsdr.StreamActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name="com.sdrtouch.rtlsdr.BinaryRunnerService"
+            android:foregroundServiceType="mediaPlayback"
+            android:exported="false" />
+    </application>
+</manifest>

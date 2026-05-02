@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MSi.SDR / SDRplay -->
+    <usb-device vendor-id="0x1df7" product-id="0x2500"/> <!-- Mirics MSi2500 (RSP1C) -->
+    <usb-device vendor-id="0x1df7" product-id="0x3000"/> <!-- SDRplay RSP1A -->
+    <usb-device vendor-id="0x1df7" product-id="0x3010"/> <!-- SDRplay RSP2 -->
+    <usb-device vendor-id="0x2040" product-id="0xd300"/> <!-- Hauppauge WinTV 133559 LF -->
+    <usb-device vendor-id="0x07ca" product-id="0x8591"/> <!-- AverMedia A859 Pure DVBT -->
+    <usb-device vendor-id="0x04bb" product-id="0x0537"/> <!-- IO-DATA GV-TV100 -->
+    <usb-device vendor-id="0x0511" product-id="0x0037"/> <!-- Logitec LDT-1S310U/J -->
+</resources>
