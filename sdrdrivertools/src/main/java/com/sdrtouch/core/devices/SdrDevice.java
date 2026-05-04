@@ -1,7 +1,7 @@
 /*
- * rtl_tcp_andro is a library that uses libusb and librtlsdr to
- * turn your Realtek RTL2832 based DVB dongle into a SDR receiver.
- * It independently implements the rtl-tcp API protocol for native Android usage.
+ * sdr_msi_driver is a library that uses libusb and libmsisdr to
+ * turn your MSi2500/MSi001 based device into a SDR receiver.
+ * It implements the rtl_tcp API protocol for native Android usage.
  * Copyright (C) 2022 by Signalware Ltd <driver@sdrtouch.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,8 +47,8 @@ public abstract class SdrDevice implements Serializable {
 	}
 	
 	/**
-	 * Always call this when the rtl-tcp is no longer running
-	 * @param e if the rtl-tcp stopped due to an exception or null if it was successful
+	 * Always call this when the TCP server is no longer running
+	 * @param e if the TCP server stopped due to an exception or null if it was successful
 	 */
 	protected void announceOnClosed(Throwable e) {
 		synchronized (listeners) {
@@ -58,7 +58,7 @@ public abstract class SdrDevice implements Serializable {
 	}
 	
 	/**
-	 * Always call this when the rtl-tcp is ready to accept connections
+	 * Always call this when the TCP server is ready to accept connections
 	 */
 	@UsedByJni
 	protected void announceOnOpen() {
@@ -78,7 +78,7 @@ public abstract class SdrDevice implements Serializable {
 	public abstract void openAsync(SdrTcpArguments sdrTcpArguments);
 	
 	/**
-	 * When anyone asks to close the rtl-tcp. This implementation doesn't need to block until the device is closed.
+	 * When anyone asks to close the TCP server. This implementation doesn't need to block until the device is closed.
 	 * You must also call {@link #announceOnClosed(Throwable)} with a null argument to indicate successful closure.
 	 */
 	public abstract void close();
@@ -96,12 +96,12 @@ public abstract class SdrDevice implements Serializable {
 	 */
 	public interface OnStatusListener {
 		/** 
-		 * When the rtl-tcp compatible service has been successfully started 
+		 * When the TCP server has been successfully started 
 		 */
 		void onOpen(SdrDevice sdrDevice);
 		
 		/**
-		 * When the rtl-tcp compatible service has been destroyed.
+		 * When the TCP server has been destroyed.
 		 * @param e can be null if running was successfull and there was no error
 		 */
 		void onClosed(Throwable e);

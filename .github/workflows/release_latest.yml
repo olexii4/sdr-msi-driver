@@ -1,0 +1,64 @@
+name: Release Latest
+
+on:
+    push:
+        branches:
+        - main
+
+env:
+    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+    build_android:
+        runs-on: ubuntu-latest
+
+        steps:
+        - uses: actions/checkout@v4
+
+        - name: Set up JDK 17
+          uses: actions/setup-java@v4
+          with:
+              java-version: '17'
+              distribution: 'temurin'
+
+        - name: Set up Android SDK
+          uses: android-actions/setup-android@v3
+
+        - name: Build APK
+          run: ./gradlew assembleDebug
+
+        - name: Upload artifact
+          uses: actions/upload-artifact@v4
+          with:
+              name: sdr_msi_driver_android
+              path: app/build/outputs/apk/debug/app-debug.apk
+
+    publish_latest_release:
+        needs: [build_android]
+        runs-on: ubuntu-latest
+
+        steps:
+        - uses: actions/checkout@v4
+
+        - name: Download artifacts
+          uses: actions/download-artifact@v4
+          with:
+              path: release_assets
+
+        - name: Update latest tag
+          run: |
+              git config user.name "github-actions[bot]"
+              git config user.email "github-actions[bot]@users.noreply.github.com"
+              git tag -f latest
+              git push origin latest --force
+
+        - name: Create or update latest release
+          env:
+              COMMIT_SHA: ${{ github.sha }}
+          run: |
+              gh release delete latest --yes 2>/dev/null || true
+              gh release create latest \
+                --title "Latest Build" \
+                --notes "Automatically published from the latest commit on \`main\`. Built from commit \`${COMMIT_SHA}\`." \
+                --prerelease \
+                release_assets/sdr_msi_driver_android/app-debug.apk

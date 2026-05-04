@@ -1,7 +1,7 @@
 /*
- * rtl_tcp_andro is a library that uses libusb and librtlsdr to
- * turn your Realtek RTL2832 based DVB dongle into a SDR receiver.
- * It independently implements the rtl-tcp API protocol for native Android usage.
+ * sdr_msi_driver is a library that uses libusb and libmsisdr to
+ * turn your MSi2500/MSi001 based device into a SDR receiver.
+ * It implements the rtl_tcp API protocol for native Android usage.
  * Copyright (C) 2022 by Signalware Ltd <driver@sdrtouch.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RTLSDR_TCP_COMMANDS_H
-#define RTLSDR_TCP_COMMANDS_H
+#ifndef MSISDR_TCP_COMMANDS_H
+#define MSISDR_TCP_COMMANDS_H
 
 // These are the commands that clients can send to the driver
 // they are send by the client via the TCP connection
@@ -50,4 +50,4 @@ typedef enum
     TCP_ANDROID_ENABLE_DC_CORRECTION = 0x81, // [NOT SUPPORTED IN RTL-SDR] set to 1 to enable software DC offset correction (default: enabled)
 } tcp_commands_t;
 
-#endif //RTLSDR_TCP_COMMANDS_H
+#endif //MSISDR_TCP_COMMANDS_H

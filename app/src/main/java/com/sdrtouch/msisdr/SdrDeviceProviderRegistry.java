@@ -1,4 +1,4 @@
-package com.sdrtouch.rtlsdr;
+package com.sdrtouch.msisdr;
 
 import com.sdrtouch.core.devices.SdrDeviceProvider;
 import com.sdrtouch.msisdr.driver.MsiSdrDeviceProvider;

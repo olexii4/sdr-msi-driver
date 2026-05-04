@@ -1,7 +1,7 @@
 /*
- * rtl_tcp_andro is a library that uses libusb and librtlsdr to
- * turn your Realtek RTL2832 based DVB dongle into a SDR receiver.
- * It independently implements the rtl-tcp API protocol for native Android usage.
+ * sdr_msi_driver is a library that uses libusb and libmsisdr to
+ * turn your MSi2500/MSi001 based device into a SDR receiver.
+ * It implements the rtl_tcp API protocol for native Android usage.
  * Copyright (C) 2022 by Signalware Ltd <driver@sdrtouch.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sdrtouch.rtlsdr;
+package com.sdrtouch.msisdr;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -49,12 +49,12 @@ import java.util.Set;
 import com.sdrtouch.msisdr.app.R;
 
 public class BinaryRunnerService extends Service {
-    public static final String ACTION_SDR_DEVICE_ATTACHED = "com.sdrtouch.rtlsdr.SDR_DEVICE_ATTACHED";
-    public static final String ACTION_SDR_DEVICE_DETACHED = "com.sdrtouch.rtlsdr.SDR_DEVICE_DETACHED";
+    public static final String ACTION_SDR_DEVICE_ATTACHED = "com.sdrtouch.msisdr.SDR_DEVICE_ATTACHED";
+    public static final String ACTION_SDR_DEVICE_DETACHED = "com.sdrtouch.msisdr.SDR_DEVICE_DETACHED";
     public static final String EXTRA_DEVICE_NAME = "deviceName";
     public static final String EXTRA_SUPPORTED_TCP_CMDS = "supportedTcpCommands";
 
-	private static final String TAG = "rtl_tcp_andro";
+	private static final String TAG = "msi_sdr_driver";
 	private final static int ONGOING_NOTIFICATION_ID = 438903919; // random id
 
 	private PowerManager.WakeLock wl = null;
@@ -109,7 +109,7 @@ public class BinaryRunnerService extends Service {
 
 	private void startForeground() {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        String NOTIFICATION_CHANNEL_ID = "rtl_sdr";
+        String NOTIFICATION_CHANNEL_ID = "msi_sdr";
 
         if (notificationManager != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(
@@ -118,7 +118,7 @@ public class BinaryRunnerService extends Service {
             );
 
             // Configure the notification channel.
-            notificationChannel.setDescription("When rtl-sdr operates");
+            notificationChannel.setDescription("When MSi SDR operates");
             notificationChannel.enableVibration(false);
             notificationManager.createNotificationChannel(notificationChannel);
         }
@@ -143,7 +143,7 @@ public class BinaryRunnerService extends Service {
 	private final OnStatusListener onStatusListener = new OnStatusListener() {
 		@Override
 		public void onOpen(SdrDevice sdrDevice) {
-			Log.appendLine("The rtl-tcp implementation is running and is ready to accept clients");
+			Log.appendLine("The TCP server is running and is ready to accept clients");
 			ackquireWakeLock();
 		}
 

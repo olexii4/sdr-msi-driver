@@ -1,7 +1,7 @@
 /*
- * rtl_tcp_andro is a library that uses libusb and librtlsdr to
- * turn your Realtek RTL2832 based DVB dongle into a SDR receiver.
- * It independently implements the rtl-tcp API protocol for native Android usage.
+ * sdr_msi_driver is a library that uses libusb and libmsisdr to
+ * turn your MSi2500/MSi001 based device into a SDR receiver.
+ * It implements the rtl_tcp API protocol for native Android usage.
  * Copyright (C) 2022 by Signalware Ltd <driver@sdrtouch.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sdrtouch.rtlsdr;
+package com.sdrtouch.msisdr;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -43,7 +43,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.sdrtouch.core.exceptions.SdrException.err_info;
-import com.sdrtouch.rtlsdr.BinaryRunnerService.LocalBinder;
+import com.sdrtouch.msisdr.BinaryRunnerService.LocalBinder;
 import com.sdrtouch.tools.Check;
 import com.sdrtouch.tools.DialogManager;
 import com.sdrtouch.tools.DialogManager.dialogs;
@@ -132,7 +132,7 @@ public class StreamActivity extends FragmentActivity implements Log.Callback {
 		
 		findViewById(R.id.help).setOnClickListener(v -> StreamActivity.this.showDialog(dialogs.DIAG_ABOUT));
 
-		if (!RtlSdrApplication.IS_PLATFORM_SUPPORTED) {
+		if (!MsiSdrApplication.IS_PLATFORM_SUPPORTED) {
 			((TextView) findViewById(R.id.warntext)).setText(R.string.platform_not_supported);
 		}
 	}
@@ -185,12 +185,12 @@ public class StreamActivity extends FragmentActivity implements Log.Callback {
 		super.onActivityResult(requestCode, resultCode, data);
 		runOnUiThread(() -> {
 			if (requestCode == START_REQ_CODE) {
-				if (resultCode == RESULT_OK)
+				if (resultCode == RESULT_OK) {
 					Log.appendLine("Starting was successful!");
-				else {
+				} else {
 					err_info einfo = err_info.unknown_error;
 					try {
-						einfo = err_info.values()[data.getIntExtra("marto.rtl_tcp_andro.RtlTcpExceptionId", err_info.unknown_error.ordinal())];
+						einfo = err_info.values()[data.getIntExtra("com.sdrtouch.msisdr.SdrExceptionId", err_info.unknown_error.ordinal())];
 					} catch (Throwable ignored) {
 					}
 					Log.appendLine("ERROR STARTING! Reason: " + einfo);
@@ -198,6 +198,7 @@ public class StreamActivity extends FragmentActivity implements Log.Callback {
 			}
 		});
 	}
+
 	
 	@Override
 	public void onChanged() {

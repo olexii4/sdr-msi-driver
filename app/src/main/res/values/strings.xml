@@ -1,12 +1,12 @@
 <resources>
 
     <string name="app_name">SDR MSi Driver</string>
-    <string name="sdr_tcp_exec">sdr_tcp</string>
+    <string name="sdr_tcp_exec">msi_tcp</string>
 	<string name="help">Help</string>
 	<string name="stream">Start stream</string>
 	<string name="kill">Kill</string>
-	<string name="args_hint">sdr_tcp command line arguments</string>
-	<string name="default_args">-a 0.0.0.0 -p 14423 -f 91800000 -s 1024000 -T 0</string>
+	<string name="args_hint">msi_tcp command line arguments</string>
+	<string name="default_args">-a 0.0.0.0 -p 14423 -f 91800000 -s 2048000 -g 78</string>
 	<string name="copy">Copy</string>
 	<string name="copied_to_clip">Output was copied to clipboard</string>
 	<string name="clear">Clear</string>

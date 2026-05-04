@@ -9,8 +9,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
 
     <queries>
-        <package android:name="marto.androsdr2" />
-        <package android:name="marto.androsdr2.a" />
+        <package android:name="org.sdrpp.sdrpp" />
         <package android:name="de.ses.wavesink" />
         <package android:name="com.mantz_it.rfanalyzer" />
         <package android:name="io.welle.welle" />
@@ -30,9 +29,9 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         tools:ignore="UnusedAttribute"
-        android:name="com.sdrtouch.rtlsdr.RtlSdrApplication">
+        android:name="com.sdrtouch.msisdr.MsiSdrApplication">
 
-        <activity android:name="com.sdrtouch.rtlsdr.DeviceOpenActivity"
+        <activity android:name="com.sdrtouch.msisdr.DeviceOpenActivity"
                   android:theme="@android:style/Theme.Dialog"
                   android:exported="true" >
             <intent-filter>
@@ -46,7 +45,7 @@
         </activity>
 
         <activity
-            android:name="com.sdrtouch.rtlsdr.UsbDelegate"
+            android:name="com.sdrtouch.msisdr.UsbDelegate"
             android:theme = "@android:style/Theme.Translucent.NoTitleBar"
             android:exported="true" >
             <intent-filter>
@@ -59,7 +58,7 @@
         </activity>
 
         <activity
-            android:name="com.sdrtouch.rtlsdr.StreamActivity"
+            android:name="com.sdrtouch.msisdr.StreamActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -69,7 +68,7 @@
         </activity>
 
         <service
-            android:name="com.sdrtouch.rtlsdr.BinaryRunnerService"
+            android:name="com.sdrtouch.msisdr.BinaryRunnerService"
             android:foregroundServiceType="mediaPlayback"
             android:exported="false" />
     </application>

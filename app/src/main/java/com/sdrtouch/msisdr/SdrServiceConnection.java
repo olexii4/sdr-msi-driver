@@ -1,4 +1,4 @@
-package com.sdrtouch.rtlsdr;
+package com.sdrtouch.msisdr;
 
 import android.content.ComponentName;
 import android.content.ServiceConnection;
