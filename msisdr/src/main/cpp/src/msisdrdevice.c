@@ -208,6 +208,12 @@ Java_com_sdrtouch_msisdr_driver_MsiSdrDevice_openAsync(
     msisdr_dev_t *device = NULL;
     RUN_OR_GOTO(msisdr_open_fd(&device, fd, devicePath), rel_jni);
 
+    /* RSP1A clones (PID 0x3000) are MSi2500-based and work correctly with
+     * MSISDR_HW_DEFAULT frequency plan. MSISDR_HW_SDRPLAY (auto-set by
+     * msisdr_setup for PID 0x3000) applies a different PLL plan designed for
+     * genuine SDRplay hardware and causes garbled reception on clones. */
+    msisdr_set_hw_flavour(device, MSISDR_HW_DEFAULT);
+
     msisdr_set_sample_format(device, "AUTO");
     msisdr_set_if_freq(device, 0);
     msisdr_set_bandwidth(device, 8000000);
