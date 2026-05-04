@@ -208,11 +208,12 @@ Java_com_sdrtouch_msisdr_driver_MsiSdrDevice_openAsync(
     msisdr_dev_t *device = NULL;
     RUN_OR_GOTO(msisdr_open_fd(&device, fd, devicePath), rel_jni);
 
-    /* RSP1A clones (PID 0x3000) are MSi2500-based and work correctly with
-     * MSISDR_HW_DEFAULT frequency plan. MSISDR_HW_SDRPLAY (auto-set by
-     * msisdr_setup for PID 0x3000) applies a different PLL plan designed for
-     * genuine SDRplay hardware and causes garbled reception on clones. */
-    msisdr_set_hw_flavour(device, MSISDR_HW_DEFAULT);
+    /* hw_flavour is auto-detected from USB PID in msisdr_setup:
+     *   PID 0x3000 / 0x3010 (RSP1A, RSP2) → MSISDR_HW_SDRPLAY
+     *   all others (MSi2500, clones)       → MSISDR_HW_DEFAULT
+     * Leave it as-is so all subsequent register writes (set_center_freq,
+     * set_if_freq, set_bandwidth) use the correct band/PLL table for the
+     * device — matching the SDRPlusPlus desktop mirisdr_source behaviour. */
 
     msisdr_set_sample_format(device, "AUTO");
     msisdr_set_if_freq(device, 0);
