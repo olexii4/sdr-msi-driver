@@ -54,14 +54,21 @@ typedef struct {
 static void sdrtcp_cleanup(sdrtcp_t * obj) {
     pthread_mutex_lock(&obj->state_locker);
     if (obj->state != STAGE_UNINITIALIZED) {
+        int prev_state = obj->state;
         obj->state = STAGE_UNINITIALIZED;
 
-        LOGI("SdrTcp: Closing from state %d", obj->state);
+        LOGI("SdrTcp: Closing from state %d", prev_state);
+
+        /* Close the listen socket BEFORE pool_free so the port is released
+         * immediately. pool_free waits for worker threads which can take time;
+         * if another service start races during that wait it would fail to
+         * bind to the same port with EADDRINUSE. */
+        if (prev_state > STAGE_INITIALIZED && obj->listen_socket != -1) {
+            close(obj->listen_socket);
+            obj->listen_socket = -1;
+        }
 
         pool_free(&obj->workpool);
-        if (obj->state != STAGE_INITIALIZED && obj->listen_socket != -1) {
-            close(obj->listen_socket);
-        }
 
         obj->client_socket = -1;
         obj->listen_socket = -1;
