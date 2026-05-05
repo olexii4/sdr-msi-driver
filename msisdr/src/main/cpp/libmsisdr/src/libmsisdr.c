@@ -30,6 +30,22 @@
 
 #include "libusb.h"
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#include <sys/ioctl.h>
+#include <linux/usbdevice_fs.h>
+/* On Samsung Android, USBDEVFS_SUBMITURB (used by libusb_control_transfer) is
+ * blocked/times-out — the interface claim belongs to Android's USB service fd.
+ * USBDEVFS_CONTROL (synchronous, not ownership-checked) works correctly.
+ * Pass raw fd to avoid incomplete-struct forward-declaration issues. */
+#define MSISDR_CTRL(p, rt, rq, v, i, d, l, t) msisdr_ctrl_fd(libusb_get_fd((p)->dh), rt, rq, v, i, d, l, t)
+static int msisdr_ctrl_fd(int fd, uint8_t reqtype, uint8_t req,
+                           uint16_t value, uint16_t index,
+                           void *data, uint16_t length, unsigned int timeout);
+#else
+#define MSISDR_CTRL(p, rt, rq, v, i, d, l, t) libusb_control_transfer((p)->dh, rt, rq, v, i, (unsigned char*)(d), l, t)
+#endif
+
 #ifndef LIBUSB_CALL
 #define LIBUSB_CALL
 #endif
@@ -42,6 +58,28 @@
 #include "structs.h"
 
 /* interní funkce - inline */
+#ifdef __ANDROID__
+static int msisdr_ctrl_fd(int fd, uint8_t reqtype, uint8_t req,
+                           uint16_t value, uint16_t index,
+                           void *data, uint16_t length, unsigned int timeout)
+{
+    if (fd < 0) return -1;
+    struct usbdevfs_ctrltransfer ctrl = {
+        .bRequestType = reqtype,
+        .bRequest     = req,
+        .wValue       = value,
+        .wIndex       = index,
+        .wLength      = length,
+        .timeout      = timeout,
+        .data         = data,
+    };
+    int r = ioctl(fd, USBDEVFS_CONTROL, &ctrl);
+    if (r < 0) __android_log_print(ANDROID_LOG_DEBUG, "msisdr",
+        "USBDEVFS_CONTROL req=0x%02x val=0x%04x: %s", req, value, strerror(errno));
+    return r;
+}
+#endif
+
 #include "reg.c"
 #include "adc.c"
 #include "convert/base.c"

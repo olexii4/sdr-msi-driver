@@ -19,7 +19,7 @@ int msisdr_streaming_start (msisdr_dev_t *p) {
     if (!p) goto failed;
     if (!p->dh) goto failed;
 
-    libusb_control_transfer(p->dh, 0x42, 0x43, 0x0, 0x0, NULL, 0, CTRL_TIMEOUT);
+    MSISDR_CTRL(p, 0x42, 0x43, 0x0, 0x0, NULL, 0, CTRL_TIMEOUT);
 
     return 0;
 
@@ -31,7 +31,7 @@ int msisdr_streaming_stop (msisdr_dev_t *p) {
     if (!p) goto failed;
     if (!p->dh) goto failed;
 
-    libusb_control_transfer(p->dh, 0x42, 0x45, 0x0, 0x0, NULL, 0, CTRL_TIMEOUT);
+    MSISDR_CTRL(p, 0x42, 0x45, 0x0, 0x0, NULL, 0, CTRL_TIMEOUT);
 
     return 0;
 

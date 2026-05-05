@@ -27,7 +27,7 @@ int msisdr_write_reg (msisdr_dev_t *p, uint8_t reg, uint32_t val) {
     fprintf( stderr, "write reg: 0x%02x, val 0x%08x\n", reg, val);
 #endif
 
-    return libusb_control_transfer(p->dh, 0x42, 0x41, value, index, NULL, 0, CTRL_TIMEOUT);
+    return MSISDR_CTRL(p, 0x42, 0x41, value, index, NULL, 0, CTRL_TIMEOUT);
 
 failed:
     return -1;

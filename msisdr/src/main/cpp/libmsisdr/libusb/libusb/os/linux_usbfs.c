@@ -1382,6 +1382,13 @@ static int op_open2(struct libusb_device_handle *handle, int fd) {
 	return usbi_add_pollfd(HANDLE_CTX(handle), hpriv->fd, POLLOUT);
 }
 
+/* Android: expose the raw fd so callers can use USBDEVFS_CONTROL synchronous ioctl */
+int API_EXPORTED libusb_get_fd(libusb_device_handle *handle)
+{
+	struct linux_device_handle_priv *hpriv = _device_handle_priv(handle);
+	return hpriv->fd;
+}
+
 static libusb_device* op_device2(struct libusb_context *ctx, const char *dev_node) {
 	uint8_t busnum, devaddr;
 	unsigned int session_id;
