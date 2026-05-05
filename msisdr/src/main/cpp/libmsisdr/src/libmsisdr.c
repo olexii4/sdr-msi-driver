@@ -373,14 +373,21 @@ int msisdr_reset (msisdr_dev_t *p) {
     if (!p) goto failed;
     if (!p->dh) goto failed;
 
-    /* měli bychom uvolnit zařízení předem? */
-
+#if defined(__APPLE__) || defined(__ANDROID__) || (defined(_WIN32) && !defined(__MINGW32__))
+    /* libusb_reset_device sends USBDEVFS_RESET which causes the USB device to
+     * re-enumerate. On Android this invalidates the fd provided by the Android
+     * USB service — all subsequent ioctls return ENODEV and streaming fails.
+     * Skip the reset; the device works correctly without it on these platforms. */
+    (void) r;
+    return 0;
+#else
     if ((r = libusb_reset_device(p->dh)) < 0) {
         fprintf( stderr, "USB reset skipped for device %u (%s), continuing\n", p->index, libusb_error_name(r));
         return 0;
     }
 
     return 0;
+#endif
 
 failed:
     return -1;
